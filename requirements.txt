@@ -1,0 +1,11 @@
+requests
+numpy
+pandas
+mlflow
+openpyxl
+tensorflow
+wandb
+pyyaml
+flask
+redis
+gunicorn

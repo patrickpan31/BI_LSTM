@@ -1,0 +1,21 @@
+main:
+  project_name: LSTM_CLASSIFIER
+  experiment_name: dev
+data:
+  path1: "ART_MED_1109.xlsx"
+  path2: "new_art.csv"
+  path3: "generated_result.csv"
+model:
+  maxlen: 40
+  epoch: 400
+  batch_size: 32
+  model_name: "./letter_model.h5"
+  embedding_weights: "./embedding_weights.npy"
+  wandb_model: "letter_model.h5"
+  word_dict_name: "./word_dicts2.json"
+  wanbd_word_dict: "word_dicts2.json"
+  output_dict: "./output_dicts2.json"
+  wandb_output_dict: "output_dicts2.json"
+retrain:
+  threshold: 2
+  current_count: 28

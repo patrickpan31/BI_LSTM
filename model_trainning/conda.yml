@@ -1,0 +1,17 @@
+name: download_data
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - requests
+  - numpy
+  - pandas
+  - pip
+  - mlflow
+  - openpyxl
+  - tensorflow
+  - pip:
+      - wandb
+      - pyyaml
+      - flask

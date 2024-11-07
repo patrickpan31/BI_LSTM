@@ -1,0 +1,20 @@
+
+services:
+  redis:
+    image: redis:latest        # Use the latest Redis image from Docker Hub
+    container_name: redis-container  # Optional: Name the Redis container
+    ports:
+      - "6379:6379"             # Expose Redis on port 6379
+
+  flask-app:
+    build: .                    # Build Flask from the Dockerfile in the current directory
+    container_name: flask-app    # Optional: Name the Flask container
+    ports:
+      - "5001:5000"             # Expose Flask on port 5000
+    depends_on:
+      - redis                   # Wait for Redis to start before Flask
+    environment:
+      - REDIS_HOST=redis        # Set the environment variable to use Redis hostname
+          # Use a custom network called flasknet
+
+

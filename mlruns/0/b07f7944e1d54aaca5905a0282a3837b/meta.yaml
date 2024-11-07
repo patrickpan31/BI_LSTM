@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/mingtengpan/Desktop/LSTM_V1.2.2/mlruns/0/b07f7944e1d54aaca5905a0282a3837b/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: b07f7944e1d54aaca5905a0282a3837b
+run_uuid: b07f7944e1d54aaca5905a0282a3837b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728701346437
+status: 1
+tags: []
+user_id: mingtengpan

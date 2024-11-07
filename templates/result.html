@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Results</title>
+    <!-- Required meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .container {
+            position: relative;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .return-home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            font-size: 24px;
+        }
+
+        .return-home-btn:hover {
+            color: #ff6b6b;
+        }
+
+        table {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-download {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            border: none;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #ee5253;
+        }
+
+        .footer {
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-content">
+        <div class="container col-md-8 offset-md-2 fade-in">
+            <!-- Return Home Button -->
+            <button type="button" class="return-home-btn" onclick="window.location.href='/'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+
+            <h2><i class="fas fa-chart-line"></i> Prediction Results</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Input</th>
+                            <th>Prediction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through predictions and input data -->
+                        {% for input, prediction in results.items() %}
+                        <tr>
+                            <td>{{ input }}</td>
+                            <td contenteditable="true">{{ prediction }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Form to submit a download request -->
+            <form method="post" action="/predict" id="results_form">
+                <!-- Add hidden fields to send the current predictions -->
+                <input type="hidden" name="modified_results" id="modified_results" value="">
+                <!-- Add buttons to download CSV or retrain model -->
+                <div class="btn-download">
+                    <button type="submit" name="download_csv" class="btn"><i class="fas fa-download"></i> Download CSV</button>
+                    <button type="submit" name="retrain_model" class="btn"><i class="fas fa-sync-alt"></i> Retrain Model</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Made with <i class="fas fa-heart"></i> by Patrick Pan</p>
+    </div>
+
+    <!-- Bootstrap JS, jQuery, and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript to handle editable predictions -->
+    <script>
+        // Add event listener to the form
+        document.getElementById('results_form').addEventListener('submit', function(e) {
+            // Collect the modified data from the table
+            var table = document.querySelector('table');
+            var data = {};
+            var rows = table.querySelectorAll('tbody tr');
+            rows.forEach(function(row) {
+                var input = row.cells[0].textContent.trim();
+                var prediction = row.cells[1].textContent.trim();
+                data[input] = prediction;
+            });
+            // Store the data in the hidden input as JSON
+            document.getElementById('modified_results').value = JSON.stringify(data);
+        });
+
+        // Make prediction cells editable on double-click
+        var predictionCells = document.querySelectorAll('tbody td:nth-child(2)');
+        predictionCells.forEach(function(cell) {
+            cell.addEventListener('dblclick', function() {
+                cell.setAttribute('contenteditable', 'true');
+                cell.focus();
+            });
+            cell.addEventListener('blur', function() {
+                cell.removeAttribute('contenteditable');
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+

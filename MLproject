@@ -1,0 +1,7 @@
+name: LSTM
+conda_env: conda.yml
+
+entry_points:
+  main:
+    command: >-
+      gunicorn -w 3 -b 0.0.0.0:5000 app:app
